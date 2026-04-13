@@ -13,10 +13,17 @@ ckb_std::entry!(program_entry);
 // * Minimal memory block in dynamic heap is 64 bytes
 // For more details, please refer to ckb-std's default_alloc macro
 // and the buddy-alloc alloc implementation.
+use ckb_sdk::rpc::CkbRpcClient;
 ckb_std::default_alloc!(16384, 1258306, 64);
 
+
 pub fn program_entry() -> i8 {
+    let testnet_url = "https://testnet.ckb.dev";
+    let rpc_client = CkbRpcClient::new(testnet_url);
     ckb_std::debug!("This is a sample contract!");
+    let block = rpc_client.get_block_by_number(0.into()).unwrap();
+    ckb_std::debug!("Genesis block hash: {}", block.header.hash);
+    ckb_std::debug!("block: {}", serde_json::to_string_pretty(&block).unwrap());
 
     0
 }
