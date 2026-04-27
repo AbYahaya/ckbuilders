@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@offckb/cli": "^0.4.6"
+  }
+}

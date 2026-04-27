@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+
+members = [
+  "contracts/amount-count-lock",
+  "contracts/counter-type",
+  "contracts/data-range-type",
+  "contracts/pubkey-hash-lock",
+]
+
+[profile.release]
+overflow-checks = true
+strip = false
+codegen-units = 1
+debug = true

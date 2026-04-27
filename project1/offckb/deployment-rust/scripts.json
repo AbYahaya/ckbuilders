@@ -1,0 +1,21 @@
+{
+  "devnet": {
+    "pubkey-hash-lock": {
+      "codeHash": "0x64f5ea883858f1bd1b944005f6b458746124db8f67a2ad698141f14a8c94e93a",
+      "hashType": "data2",
+      "cellDeps": [
+        {
+          "cellDep": {
+            "outPoint": {
+              "txHash": "0x68251a455ebb734f6558bce397d72e6d5da130167a48ae4f038c31c01de932cf",
+              "index": 0
+            },
+            "depType": "code"
+          }
+        }
+      ]
+    }
+  },
+  "testnet": {},
+  "mainnet": {}
+}

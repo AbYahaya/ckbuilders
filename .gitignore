@@ -37,4 +37,6 @@ pnpm-debug.log*
 # Python cache (in case scripts are added)
 **/__pycache__/
 **/*.pyc
+EXAMPLES.md
+status.md
 

@@ -1,0 +1,12 @@
+{
+  "cell_recipes": [
+    {
+      "name": "pubkey-hash-lock",
+      "tx_hash": "0x53ee47c2229be2f2355d07249ee426baffa12e6096ce568ec1140a1462802e44",
+      "index": 0,
+      "occupied_capacity": 2736800000000,
+      "data_hash": "0x0fbae1b9e7fdc8ebec0373588f075536048af446b60555755fa7b9903c7e2925"
+    }
+  ],
+  "dep_group_recipes": []
+}

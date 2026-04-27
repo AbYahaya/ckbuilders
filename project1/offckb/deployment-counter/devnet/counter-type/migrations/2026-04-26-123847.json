@@ -1,0 +1,12 @@
+{
+  "cell_recipes": [
+    {
+      "name": "counter-type",
+      "tx_hash": "0x2e7a7a9df2585d13cc108debffb6a6c90891ba5fbd1f9f8fa13e8f244dbdeb97",
+      "index": 0,
+      "occupied_capacity": 2900000000000,
+      "data_hash": "0x1cb6f191c3d29f9c05a4f25313ba3ec41d67a6a01b21908eb93cd7389b47c9a0"
+    }
+  ],
+  "dep_group_recipes": []
+}
