@@ -82,3 +82,11 @@
   * on-chain script validation
 * Build a **basic Rust lock script**
 * Experiment with **CCC for transaction building**
+
+---
+
+## 📸 Reference Images
+
+![ckb4](images/ckb4.png)
+
+![ckb6](images/ckb6.png)

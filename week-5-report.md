@@ -81,3 +81,11 @@
 * Continue expanding mini applications with negative/failure-path tests
 * Add browser-based UI flows for selected examples while keeping the same contract logic
 * Deepen understanding of production-ready off-chain patterns (wallet integration, signing UX, and safer config handling)
+
+---
+
+## 📸 Reference Images
+
+![ckbL6](images/ckbL6.png)
+
+![ckbL7](images/ckbL7.png)

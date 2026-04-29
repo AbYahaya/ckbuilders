@@ -94,3 +94,10 @@
 * Learned how **script arguments (`args`) act as configuration inputs** for smart contracts
 * Understood how **hash types and Type ID influence upgradeability and script behavior**
 * Built foundational knowledge required to start writing real smart contracts using Capsule
+---
+
+## 📸 Reference Images
+
+![ckbL3](images/ckbL3.png)
+
+![CKBL2](images/CKBL2.png)
