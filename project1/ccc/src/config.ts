@@ -10,6 +10,13 @@ function optional(name: string, fallback: string): string {
   return process.env[name] ?? fallback;
 }
 
+function parseList(value: string): string[] {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
+}
+
 export const config = {
   rpcUrl: required("CKB_RPC_URL"),
   indexerUrl: required("CKB_INDEXER_URL"),
@@ -32,6 +39,7 @@ export const config = {
     "COUNTER_TYPE_BINARY_PATH",
     "../contracts/target/riscv64imac-unknown-none-elf/release/counter-type",
   ),
+  storeFilePath: optional("STORE_FILE_PATH", "../files/HelloNervos.txt"),
   lockCodeHash: required("LOCK_CODE_HASH"),
   lockHashType: required("LOCK_HASH_TYPE"),
   lockTxHash: required("LOCK_TX_HASH"),
@@ -57,6 +65,36 @@ export const config = {
   dataRangeTypeInitialBytes: Number(optional("DATA_RANGE_TYPE_INITIAL_BYTES", "10")),
   dataRangeTypeUpdatedBytes: Number(optional("DATA_RANGE_TYPE_UPDATED_BYTES", "20")),
   counterTypeCapacityShannons: BigInt(optional("COUNTER_TYPE_CAPACITY_SHANNONS", "13000000000")),
+  sudtCodeHash: optional(
+    "SUDT_CODE_HASH",
+    "0x6283a479a3cf5d4276cd93594de9f1827ab9b55c7b05b3d28e4c2e0a696cfefd",
+  ),
+  sudtHashType: optional("SUDT_HASH_TYPE", "type"),
+  sudtDepTxHash: optional(
+    "SUDT_DEP_TX_HASH",
+    "0x1bb87da347a776a927ab6593e1e10304ca195f8e24279f039008d5e3115b1bf7",
+  ),
+  sudtDepIndex: optional("SUDT_DEP_INDEX", "0x5"),
+  sudtDepType: optional("SUDT_DEP_TYPE", "code"),
+  multisigCodeHash: optional(
+    "MULTISIG_CODE_HASH",
+    "0x5c5069eb0857efc65e1bca0c07df34c31663b3622fd3876c876320fc9634e2a8",
+  ),
+  multisigHashType: optional("MULTISIG_HASH_TYPE", "type"),
+  multisigDepTxHash: optional(
+    "MULTISIG_DEP_TX_HASH",
+    "0x4d804f1495612631da202fe9902fa9899118554b08138cfe5dfb50e1ede76293",
+  ),
+  multisigDepIndex: optional("MULTISIG_DEP_INDEX", "0x1"),
+  multisigDepType: optional("MULTISIG_DEP_TYPE", "depGroup"),
+  multisigReserved: Number(optional("MULTISIG_RESERVED", "0")),
+  multisigMustMatch: Number(optional("MULTISIG_MUST_MATCH", "0")),
+  multisigThreshold: Number(optional("MULTISIG_THRESHOLD", "2")),
+  multisigAddresses: parseList(optional("MULTISIG_ADDRESSES", "")),
+  multisigPrivateKeys: parseList(optional("MULTISIG_PRIVATE_KEYS", "")),
+  multisigFallbackAddress2: optional("MULTISIG_FALLBACK_ADDRESS_2", ""),
+  multisigFallbackAddress3: optional("MULTISIG_FALLBACK_ADDRESS_3", ""),
+  multisigFallbackPrivateKey2: optional("MULTISIG_FALLBACK_PRIVATE_KEY_2", ""),
   secpCodeHash: optional(
     "SECP_CODE_HASH",
     "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8",
@@ -97,4 +135,6 @@ export const config = {
   daoDepIndex: optional("DAO_DEP_INDEX", "0x2"),
   daoDepType: optional("DAO_DEP_TYPE", "code"),
   receiverAddress: required("RECEIVER_ADDRESS"),
+  sudtReceiverAddress1: optional("SUDT_RECEIVER_ADDRESS_1", required("RECEIVER_ADDRESS")),
+  sudtReceiverAddress2: optional("SUDT_RECEIVER_ADDRESS_2", optional("SUDT_RECEIVER_ADDRESS_1", required("RECEIVER_ADDRESS"))),
 };

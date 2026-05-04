@@ -13,7 +13,10 @@
     "start": "tsx src/flow.ts",
     "start:amount-count-lock": "tsx src/flow-amount-count-lock.ts",
     "start:counter-type": "tsx src/flow-counter-type.ts",
-    "start:data-range-type": "tsx src/flow-data-range-type.ts"
+    "start:data-range-type": "tsx src/flow-data-range-type.ts",
+    "start:store-file": "tsx src/flow-store-file.ts",
+    "start:sudt": "tsx src/flow-sudt.ts",
+    "start:multisig": "tsx src/flow-multisig.ts"
   },
   "dependencies": {
     "@ckb-ccc/core": "latest",
