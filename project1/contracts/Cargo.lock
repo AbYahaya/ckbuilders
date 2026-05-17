@@ -3,6 +3,20 @@
 version = 4
 
 [[package]]
+name = "agreement-acceptance-type"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
+]
+
+[[package]]
+name = "agreement-version-type"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
+]
+
+[[package]]
 name = "amount-count-lock"
 version = "0.1.0"
 dependencies = [

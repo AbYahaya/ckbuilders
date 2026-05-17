@@ -1,0 +1,13 @@
+Agreement v1
+
+1. Purpose
+This agreement records the terms accepted by the user for the service.
+
+2. Immutability
+The agreement text is stored off-chain and its hash is stored on CKB.
+
+3. Updates
+If the agreement changes, a new version must be published and re-accepted.
+
+4. Verification
+Users can verify the hash and transaction on the public explorer.

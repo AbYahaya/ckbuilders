@@ -3,6 +3,8 @@ resolver = "2"
 
 members = [
   "contracts/amount-count-lock",
+  "contracts/agreement-acceptance-type",
+  "contracts/agreement-version-type",
   "contracts/counter-type",
   "contracts/data-range-type",
   "contracts/pubkey-hash-lock",

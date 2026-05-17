@@ -10,10 +10,13 @@
     "deploy:amount-count-lock": "tsx src/deploy-amount-count-lock.ts",
     "deploy:counter-type": "tsx src/deploy-counter-type.ts",
     "deploy:data-range-type": "tsx src/deploy-data-range-type.ts",
+    "deploy:agreement-version-type": "tsx src/deploy-agreement-version-type.ts",
+    "deploy:agreement-acceptance-type": "tsx src/deploy-agreement-acceptance-type.ts",
     "start": "tsx src/flow.ts",
     "start:amount-count-lock": "tsx src/flow-amount-count-lock.ts",
     "start:counter-type": "tsx src/flow-counter-type.ts",
     "start:data-range-type": "tsx src/flow-data-range-type.ts",
+    "start:agreement": "tsx src/flow-agreement.ts",
     "start:store-file": "tsx src/flow-store-file.ts",
     "start:sudt": "tsx src/flow-sudt.ts",
     "start:multisig": "tsx src/flow-multisig.ts"

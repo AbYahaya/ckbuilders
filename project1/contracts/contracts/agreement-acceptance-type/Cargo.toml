@@ -1,0 +1,11 @@
+[package]
+name = "agreement-acceptance-type"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ckb-std = "0.18"
+
+[features]
+library = []
+native-simulator = ["library", "ckb-std/native-simulator"]

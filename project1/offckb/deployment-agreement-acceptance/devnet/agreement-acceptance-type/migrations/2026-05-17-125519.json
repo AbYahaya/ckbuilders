@@ -1,0 +1,12 @@
+{
+  "cell_recipes": [
+    {
+      "name": "agreement-acceptance-type",
+      "tx_hash": "0x2a4e75ff336ea53a0cd8d071816b994301c520a4a8bae90de2b8f820ac5f7c8f",
+      "index": 0,
+      "occupied_capacity": 2884800000000,
+      "data_hash": "0xa3e31ac918afbf8a084bd71abaa990614c88f2bfe1a91294da1f59fb4d6050a5"
+    }
+  ],
+  "dep_group_recipes": []
+}
