@@ -56,3 +56,11 @@
 * Add version chaining to link successive agreement versions
 * Add a simple viewer endpoint that surfaces agreement text + tx hash
 * Explore batching acceptance submissions
+
+---
+
+## 📸 Reference Images
+
+![ckbP1](images/ckbP1.png)
+
+![ckbp3](images/ckbp3.png)
