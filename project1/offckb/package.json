@@ -22,7 +22,8 @@
     "test:only": "jest",
     "add-contract": "node scripts/add-contract.js",
     "clean": "rimraf dist",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "viewer:start": "node scripts/agreement-viewer.js"
   },
   "dependencies": {
     "@ckb-js-std/bindings": "~1.0.0",

@@ -1,13 +1,13 @@
 {
   "devnet": {
     "agreement-acceptance-type": {
-      "codeHash": "0xa3e31ac918afbf8a084bd71abaa990614c88f2bfe1a91294da1f59fb4d6050a5",
+      "codeHash": "0xee9ca162240ba6984061cff28403d8c89e67d6fc7c123bfa061067527c244dba",
       "hashType": "data2",
       "cellDeps": [
         {
           "cellDep": {
             "outPoint": {
-              "txHash": "0x2a4e75ff336ea53a0cd8d071816b994301c520a4a8bae90de2b8f820ac5f7c8f",
+              "txHash": "0x3d122b2c5469ebead388eb1892dc6f63d4f6861180b6567217131fc4dafee38b",
               "index": 0
             },
             "depType": "code"

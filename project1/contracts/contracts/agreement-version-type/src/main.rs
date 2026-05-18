@@ -10,7 +10,7 @@ use ckb_std::ckb_constants::Source;
 use ckb_std::error::SysError;
 use ckb_std::high_level::{load_cell, load_cell_data, QueryIter};
 
-const AGREEMENT_DATA_LEN: usize = 68; // hash(32) + version(4) + uri_hash(32)
+const AGREEMENT_DATA_LEN: usize = 104; // hash(32) + version(4) + uri_hash(32) + prev_tx_hash(32) + prev_index(4)
 
 #[repr(i8)]
 enum Error {
@@ -19,6 +19,7 @@ enum Error {
     InvalidVersion = 3,
     UpdateNotAllowed = 4,
     InvalidTransactionStructure = 5,
+    InvalidPrevOutPoint = 6,
 }
 
 impl From<SysError> for Error {
@@ -60,6 +61,18 @@ fn run() -> Result<(), Error> {
     let version = read_u32_le(&output_data[32..36]);
     if version == 0 {
         return Err(Error::InvalidVersion);
+    }
+
+    let prev_hash = &output_data[68..100];
+    let prev_index = read_u32_le(&output_data[100..104]);
+    let has_prev = prev_hash.iter().any(|byte| *byte != 0) || prev_index != 0;
+
+    if version == 1 {
+        if has_prev {
+            return Err(Error::InvalidPrevOutPoint);
+        }
+    } else if !has_prev {
+        return Err(Error::InvalidPrevOutPoint);
     }
 
     Ok(())

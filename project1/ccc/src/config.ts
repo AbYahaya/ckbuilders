@@ -84,6 +84,12 @@ export const config = {
   agreementTextPath: optional("AGREEMENT_TEXT_PATH", "../files/Agreement-v1.txt"),
   agreementUri: optional("AGREEMENT_URI", "https://example.com/agreements/v1"),
   agreementVersion: Number(optional("AGREEMENT_VERSION", "1")),
+  agreementPrevTxHash: optional(
+    "AGREEMENT_PREV_TX_HASH",
+    "0x0000000000000000000000000000000000000000000000000000000000000000",
+  ),
+  agreementPrevTxIndex: optional("AGREEMENT_PREV_TX_INDEX", "0x0"),
+  agreementBatchCount: Number(optional("AGREEMENT_BATCH_COUNT", "3")),
   agreementCapacityShannons: BigInt(optional("AGREEMENT_CAPACITY_SHANNONS", "15000000000")),
   acceptanceCapacityShannons: BigInt(optional("ACCEPTANCE_CAPACITY_SHANNONS", "15000000000")),
   sudtCodeHash: optional(

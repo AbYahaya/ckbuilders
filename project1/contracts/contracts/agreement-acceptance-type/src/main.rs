@@ -11,7 +11,7 @@ use ckb_std::error::SysError;
 use ckb_std::high_level::{load_cell, load_cell_data, QueryIter};
 
 const ACCEPTANCE_DATA_LEN: usize = 36; // agreement_hash(32) + version(4)
-const AGREEMENT_DATA_LEN: usize = 68; // hash(32) + version(4) + uri_hash(32)
+const AGREEMENT_DATA_LEN: usize = 104; // hash(32) + version(4) + uri_hash(32) + prev_tx_hash(32) + prev_index(4)
 
 #[repr(i8)]
 enum Error {
@@ -49,32 +49,39 @@ fn run() -> Result<(), Error> {
         return Err(Error::UpdateNotAllowed);
     }
 
-    if group_output_count != 1 {
+    if group_output_count == 0 {
         return Err(Error::InvalidTransactionStructure);
     }
 
-    let output_data = load_cell_data(0, Source::GroupOutput)?;
-    if output_data.len() != ACCEPTANCE_DATA_LEN {
-        return Err(Error::InvalidDataLength);
-    }
-
-    let acceptance_hash = &output_data[0..32];
-    let acceptance_version = read_u32_le(&output_data[32..36]);
-
-    for dep_data in QueryIter::new(load_cell_data, Source::CellDep) {
-        if dep_data.len() != AGREEMENT_DATA_LEN {
-            continue;
+    for output_data in QueryIter::new(load_cell_data, Source::GroupOutput) {
+        if output_data.len() != ACCEPTANCE_DATA_LEN {
+            return Err(Error::InvalidDataLength);
         }
 
-        let agreement_hash = &dep_data[0..32];
-        let agreement_version = read_u32_le(&dep_data[32..36]);
+        let acceptance_hash = &output_data[0..32];
+        let acceptance_version = read_u32_le(&output_data[32..36]);
 
-        if agreement_hash == acceptance_hash && agreement_version == acceptance_version {
-            return Ok(());
+        let mut matched = false;
+        for dep_data in QueryIter::new(load_cell_data, Source::CellDep) {
+            if dep_data.len() != AGREEMENT_DATA_LEN {
+                continue;
+            }
+
+            let agreement_hash = &dep_data[0..32];
+            let agreement_version = read_u32_le(&dep_data[32..36]);
+
+            if agreement_hash == acceptance_hash && agreement_version == acceptance_version {
+                matched = true;
+                break;
+            }
+        }
+
+        if !matched {
+            return Err(Error::AgreementDepNotFound);
         }
     }
 
-    Err(Error::AgreementDepNotFound)
+    Ok(())
 }
 
 pub fn program_entry() -> i8 {
