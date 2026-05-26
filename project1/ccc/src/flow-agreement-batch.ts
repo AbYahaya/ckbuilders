@@ -1,4 +1,5 @@
 import * as ccc from "@ckb-ccc/core";
+import { utf8ToBytes } from "@noble/hashes/utils";
 import { config } from "./config.js";
 import { hexFromBytes, normalizeHex } from "./crypto.js";
 import { createLocalClient } from "./local-client.js";
@@ -26,9 +27,28 @@ function readU32LE(source: Uint8Array, offset: number): number {
 }
 
 function buildAcceptanceData(agreementHash: Uint8Array, version: number): Uint8Array {
-  const out = new Uint8Array(36);
+  return buildAcceptanceDataWithMetadata(agreementHash, version, new Uint8Array());
+}
+
+function parseMetadataValue(value: string): Uint8Array {
+  if (!value) {
+    return new Uint8Array();
+  }
+  if (value.startsWith("0x")) {
+    return ccc.bytesFrom(value);
+  }
+  return utf8ToBytes(value);
+}
+
+function buildAcceptanceDataWithMetadata(
+  agreementHash: Uint8Array,
+  version: number,
+  metadata: Uint8Array,
+): Uint8Array {
+  const out = new Uint8Array(36 + metadata.length);
   out.set(agreementHash, 0);
   writeU32LE(version, out, 32);
+  out.set(metadata, 36);
   return out;
 }
 
@@ -115,18 +135,20 @@ async function createBatchAcceptance(
   agreementHash: Uint8Array,
   version: number,
   count: number,
+  metadataList: Uint8Array[],
 ): Promise<string> {
   const sender = await signer.getRecommendedAddressObj();
   const tx = ccc.Transaction.from({});
 
   for (let i = 0; i < count; i += 1) {
+    const metadata = metadataList[i] ?? new Uint8Array();
     tx.addOutput(
       {
         capacity: config.acceptanceCapacityShannons,
         lock: sender.script,
         type: getAcceptanceTypeScript(),
       },
-      ccc.hexFrom(buildAcceptanceData(agreementHash, version)),
+      ccc.hexFrom(buildAcceptanceDataWithMetadata(agreementHash, version, metadata)),
     );
   }
 
@@ -151,6 +173,12 @@ async function main(): Promise<void> {
   const signer = new ccc.SignerCkbPrivateKey(client, normalizeHex(config.privateKey));
   const typeScript = getAgreementTypeScript();
   const batchCount = Math.max(1, config.agreementBatchCount);
+  const metadataValues = config.agreementAcceptanceMetadata;
+  const metadataList: Uint8Array[] = [];
+
+  for (let i = 0; i < batchCount; i += 1) {
+    metadataList.push(parseMetadataValue(metadataValues[i] ?? ""));
+  }
 
   console.log("Using RPC:", config.rpcUrl);
   console.log("Using Indexer:", config.indexerUrl);
@@ -162,6 +190,14 @@ async function main(): Promise<void> {
   console.log("Acceptance type dep out-point:", `${config.agreementAcceptanceTypeTxHash}:${config.agreementAcceptanceTypeTxIndex}`);
   console.log("Agreement version:", config.agreementVersion.toString());
   console.log("Batch count:", batchCount.toString());
+  if (metadataList.some((entry) => entry.length > 0)) {
+    console.log(
+      "Acceptance metadata entries:",
+      metadataList.map((entry) => (entry.length > 0 ? ccc.hexFrom(entry) : "none")).join(", "),
+    );
+  } else {
+    console.log("Acceptance metadata entries: none");
+  }
 
   const agreement = await findAgreementCell(client, typeScript, config.agreementVersion);
 
@@ -174,6 +210,7 @@ async function main(): Promise<void> {
     agreement.hash,
     agreement.version,
     batchCount,
+    metadataList,
   );
 
   console.log("Batch acceptance tx sent:", txHash);

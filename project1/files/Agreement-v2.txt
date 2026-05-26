@@ -1,0 +1,7 @@
+Agreement v2
+
+This agreement updates the terms accepted by the user for the service.
+
+The agreement text is stored off-chain and its hash is stored on CKB.
+
+If the agreement changes, a new version must be published and re-accepted.

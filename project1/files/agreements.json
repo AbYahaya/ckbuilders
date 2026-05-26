@@ -1,0 +1,16 @@
+[
+  {
+    "version": 1,
+    "textPath": "Agreement-v1.txt",
+    "uri": "https://example.com/agreements/v1",
+    "agreementTxHash": "",
+    "acceptanceTxHash": ""
+  },
+  {
+    "version": 2,
+    "textPath": "Agreement-v2.txt",
+    "uri": "https://example.com/agreements/v2",
+    "agreementTxHash": "",
+    "acceptanceTxHash": ""
+  }
+]

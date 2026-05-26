@@ -54,7 +54,7 @@ fn run() -> Result<(), Error> {
     }
 
     for output_data in QueryIter::new(load_cell_data, Source::GroupOutput) {
-        if output_data.len() != ACCEPTANCE_DATA_LEN {
+        if output_data.len() < ACCEPTANCE_DATA_LEN {
             return Err(Error::InvalidDataLength);
         }
 

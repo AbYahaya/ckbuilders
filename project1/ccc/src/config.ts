@@ -90,6 +90,7 @@ export const config = {
   ),
   agreementPrevTxIndex: optional("AGREEMENT_PREV_TX_INDEX", "0x0"),
   agreementBatchCount: Number(optional("AGREEMENT_BATCH_COUNT", "3")),
+  agreementAcceptanceMetadata: parseList(optional("AGREEMENT_ACCEPTANCE_METADATA", "")),
   agreementCapacityShannons: BigInt(optional("AGREEMENT_CAPACITY_SHANNONS", "15000000000")),
   acceptanceCapacityShannons: BigInt(optional("ACCEPTANCE_CAPACITY_SHANNONS", "15000000000")),
   sudtCodeHash: optional(

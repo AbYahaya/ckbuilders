@@ -54,6 +54,10 @@ function parseU32Hex(value: string, name: string): number {
   return parsed;
 }
 
+function isZeroBytes(bytes: Uint8Array): boolean {
+  return bytes.every((byte) => byte === 0);
+}
+
 async function readAgreementText(): Promise<Uint8Array> {
   const buf = await readFile(config.agreementTextPath);
   return new Uint8Array(buf);
@@ -75,10 +79,25 @@ function buildAgreementData(
   return out;
 }
 
-function buildAcceptanceData(agreementHash: Uint8Array, version: number): Uint8Array {
-  const out = new Uint8Array(36);
+function parseMetadataValue(value: string): Uint8Array {
+  if (!value) {
+    return new Uint8Array();
+  }
+  if (value.startsWith("0x")) {
+    return ccc.bytesFrom(value);
+  }
+  return utf8ToBytes(value);
+}
+
+function buildAcceptanceData(
+  agreementHash: Uint8Array,
+  version: number,
+  metadata: Uint8Array,
+): Uint8Array {
+  const out = new Uint8Array(36 + metadata.length);
   out.set(agreementHash, 0);
   writeU32LE(version, out, 32);
+  out.set(metadata, 36);
   return out;
 }
 
@@ -182,6 +201,32 @@ async function findAgreementCell(
   throw new Error("No agreement version cell found for the provided hash/version");
 }
 
+async function findAgreementCellByVersion(
+  client: ccc.Client,
+  typeScript: ccc.Script,
+  version: number,
+): Promise<ccc.Cell> {
+  for await (const cell of client.findCells({
+    script: typeScript,
+    scriptType: "type",
+    scriptSearchMode: "exact",
+    withData: true,
+  })) {
+    if (!cell.outPoint || !cell.outputData) {
+      continue;
+    }
+    const parsed = parseAgreementData(cell.outputData);
+    if (!parsed) {
+      continue;
+    }
+    if (parsed.version === version) {
+      return cell;
+    }
+  }
+
+  throw new Error("No agreement version cell found for the provided version");
+}
+
 async function createAcceptance(
   client: ccc.Client,
   signer: ccc.SignerCkbPrivateKey,
@@ -223,8 +268,25 @@ async function main(): Promise<void> {
   const agreementText = await readAgreementText();
   const agreementHash = blake2b256(agreementText);
   const uriHash = blake2b256(utf8ToBytes(config.agreementUri));
-  const prevTxHash = parseHexBytes(config.agreementPrevTxHash, 32, "AGREEMENT_PREV_TX_HASH");
-  const prevIndex = parseU32Hex(config.agreementPrevTxIndex, "AGREEMENT_PREV_TX_INDEX");
+  let prevTxHash = parseHexBytes(config.agreementPrevTxHash, 32, "AGREEMENT_PREV_TX_HASH");
+  let prevIndex = parseU32Hex(config.agreementPrevTxIndex, "AGREEMENT_PREV_TX_INDEX");
+  if (config.agreementVersion > 1 && isZeroBytes(prevTxHash) && prevIndex === 0) {
+    const prevCell = await findAgreementCellByVersion(
+      client,
+      getAgreementTypeScript(),
+      config.agreementVersion - 1,
+    );
+    if (!prevCell.outPoint) {
+      throw new Error("Previous agreement cell is missing outPoint");
+    }
+    prevTxHash = ccc.bytesFrom(prevCell.outPoint.txHash);
+    prevIndex = parseU32Hex(prevCell.outPoint.index, "AGREEMENT_PREV_TX_INDEX");
+    console.log(
+      "Resolved prev out-point from version",
+      config.agreementVersion - 1,
+      `${prevCell.outPoint.txHash}:${prevCell.outPoint.index}`,
+    );
+  }
   const agreementData = buildAgreementData(
     agreementHash,
     config.agreementVersion,
@@ -232,7 +294,12 @@ async function main(): Promise<void> {
     prevTxHash,
     prevIndex,
   );
-  const acceptanceData = buildAcceptanceData(agreementHash, config.agreementVersion);
+  const acceptanceMetadata = parseMetadataValue(config.agreementAcceptanceMetadata[0] ?? "");
+  const acceptanceData = buildAcceptanceData(
+    agreementHash,
+    config.agreementVersion,
+    acceptanceMetadata,
+  );
 
   console.log("Using RPC:", config.rpcUrl);
   console.log("Using Indexer:", config.indexerUrl);
@@ -245,9 +312,13 @@ async function main(): Promise<void> {
   console.log("Agreement text path:", config.agreementTextPath);
   console.log("Agreement URI:", config.agreementUri);
   console.log("Agreement version:", config.agreementVersion.toString());
-  console.log("Agreement prev tx hash:", config.agreementPrevTxHash);
-  console.log("Agreement prev tx index:", config.agreementPrevTxIndex);
+  console.log("Agreement prev tx hash:", hexFromBytes(prevTxHash));
+  console.log("Agreement prev tx index:", `0x${prevIndex.toString(16)}`);
   console.log("Agreement hash:", hexFromBytes(agreementHash));
+  console.log(
+    "Acceptance metadata:",
+    acceptanceMetadata.length > 0 ? ccc.hexFrom(acceptanceMetadata) : "none",
+  );
 
   const agreementTxHash = await createAgreementVersion(signer, agreementData);
   console.log("Publish agreement tx sent:", agreementTxHash);
