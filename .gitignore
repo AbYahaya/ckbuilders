@@ -34,9 +34,11 @@ pnpm-debug.log*
 # Rust build output
 **/target/
 
+# Local CKB/offckb devnet state
+project1/local-devnet/
+
 # Python cache (in case scripts are added)
 **/__pycache__/
 **/*.pyc
 EXAMPLES.md
 status.md
-

@@ -50,3 +50,5 @@ System scripts export:
 - build:rust-lock generates offckb/dist-rust/pubkey-hash-lock
 - offckb deploy has size checks, so using the stripped binary is required
 - All accounts from offckb accounts are for local testing only
+- For this local devnet, the offckb proxy RPC on `http://127.0.0.1:28114` can be
+  used for both normal RPC calls and CCC indexer-backed calls such as `get_cells`

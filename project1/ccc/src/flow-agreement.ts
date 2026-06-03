@@ -54,6 +54,17 @@ function parseU32Hex(value: string, name: string): number {
   return parsed;
 }
 
+function parseU32Like(value: string | bigint, name: string): number {
+  if (typeof value === "bigint") {
+    if (value < 0 || value > 0xffffffffn) {
+      throw new Error(`Invalid ${name} (must be u32)`);
+    }
+    return Number(value);
+  }
+
+  return parseU32Hex(value, name);
+}
+
 function isZeroBytes(bytes: Uint8Array): boolean {
   return bytes.every((byte) => byte === 0);
 }
@@ -280,7 +291,7 @@ async function main(): Promise<void> {
       throw new Error("Previous agreement cell is missing outPoint");
     }
     prevTxHash = ccc.bytesFrom(prevCell.outPoint.txHash);
-    prevIndex = parseU32Hex(prevCell.outPoint.index, "AGREEMENT_PREV_TX_INDEX");
+    prevIndex = parseU32Like(prevCell.outPoint.index, "AGREEMENT_PREV_TX_INDEX");
     console.log(
       "Resolved prev out-point from version",
       config.agreementVersion - 1,

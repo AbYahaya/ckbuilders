@@ -3,14 +3,14 @@
     "version": 1,
     "textPath": "Agreement-v1.txt",
     "uri": "https://example.com/agreements/v1",
-    "agreementTxHash": "",
-    "acceptanceTxHash": ""
+    "agreementTxHash": "0x312429df96064280e9401510a715315b0e38b11f95fa32637bc5632e6b55d442",
+    "acceptanceTxHash": "0xb323904431111d771c730321cce59d20f8b2cb0297e09368a63faa28a71a5792"
   },
   {
     "version": 2,
     "textPath": "Agreement-v2.txt",
     "uri": "https://example.com/agreements/v2",
-    "agreementTxHash": "",
-    "acceptanceTxHash": ""
+    "agreementTxHash": "0x3a1cca384577f0cd147ad47a7fefe285eb002cb87ece7fb5b62fea257802abbf",
+    "acceptanceTxHash": "0xfd0ee85c72cee23a4c0ba2da9ba0912ec830527ca07e9200f9a1f7765da901ac"
   }
 ]
